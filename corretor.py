@@ -52,8 +52,11 @@ def substitui(entrada, alfabeto):
 
         return possibilidades
 
+
+
 # gera uma lista de palavras trocando cada letra
 # da palavra original com as suas vizinhas
+
 
 def troca(entrada):
 
@@ -69,28 +72,33 @@ def troca(entrada):
                 for k in range(i+1):
                         trocado += entrada[k]
         return possibilidades
-                
-        
+
+
 
 
 # numa dada frase, identifica quais palavras nao
 # pertencem ao dicionario, e devolve uma lista com elas
 
 
-def identifica(palavras, dicionario):
+def identifica(palavras, dicionario, informal):
     
     
     erradas = []
+    informais = []
     for i in palavras:
-            if len(i)<4:
-                    if i not in dicionario["tres"]:
-                            erradas.append(i)
-            else:
-                    if i not in dicionario[i[0]][i[1]][i[2]]:
+            if len(i)<5:
+                    if i not in dicionario["quatro"]:
+                            if i in informal["quatro"]:
+                                    informais.append(i)
+                            else:
+                                    erradas.append(i)
+            elif i not in dicionario[i[0]][i[1]][i[2]][i[3]]:
+                    if i in informal[i[0]][i[1]][i[2]][i[3]]:
+                            informais.append(i)
+                    else:
                             erradas.append(i)
 
-    return erradas                                
-                                              
+    return erradas, informais                                          
 
 
 # retorna uma lista de sugestões para correção de
@@ -129,39 +137,40 @@ def corretor_palavra(palavra, dicionario):
 
         for word in inserir:
                 
-                if len(word)<4:
-                        if word in dicionario["tres"]:
+                if len(word)<5:
+                        if word in dicionario["quatro"]:
                                 possiveis.append(word)
                 else:
-                        if word in dicionario[word[0]][word[1]][word[2]]:
+                        if word in dicionario[word[0]][word[1]][word[2]][word[3]]:
                                 possiveis.append(word)
                 
         for word in excluir:
                 
-                if len(word)<4:
-                        if word in dicionario["tres"]:
+                if len(word)<5:
+                        if word in dicionario["quatro"]:
                                 possiveis.append(word)
                 else:
-                        if word in dicionario[word[0]][word[1]][word[2]]:
+                        if word in dicionario[word[0]][word[1]][word[2]][word[3]]:
                                 possiveis.append(word)
                 
         for word in substituir:
 
-                if len(word)<4:
-                        if word in dicionario["tres"]:
+                if len(word)<5:
+                        if word in dicionario["quatro"]:
                                 possiveis.append(word)
                 else:
-                        if word in dicionario[word[0]][word[1]][word[2]]:
+                        if word in dicionario[word[0]][word[1]][word[2]][word[3]]:
                                 possiveis.append(word)
 
         for word in trocar:
 
-                if len(word)<4:
-                        if word in dicionario["tres"]:
+                if len(word)<5:
+                        if word in dicionario["quatro"]:
                                 possiveis.append(word)
                 else:
-                        if word in dicionario[word[0]][word[1]][word[2]]:
+                        if word in dicionario[word[0]][word[1]][word[2]][word[3]]:
                                 possiveis.append(word)
+
 
 
         if len(possiveis)==0:
@@ -171,40 +180,41 @@ def corretor_palavra(palavra, dicionario):
                 for i in inserir:
                         lista = insere(i,alfabeto)
                         for word in lista:
-                                if len(word)<4:
-                                        if word in dicionario["tres"] and word not in possiveis:
+                                if len(word)<5:
+                                        if word in dicionario["quatro"] and word not in possiveis:
                                                 possiveis.append(word)
                                 else:
-                                        if word in dicionario[word[0]][word[1]][word[2]] and word not in possiveis:
+                                        if word in dicionario[word[0]][word[1]][word[2]][word[3]] and word not in possiveis:
                                                 possiveis.append(word)
                 for i in excluir:
                         lista = exclui(i)
                         for word in lista:
-                                if len(word)<4:
-                                        if word in dicionario["tres"] and word not in possiveis:
+                                if len(word)<5:
+                                        if word in dicionario["quatro"] and word not in possiveis:
                                                 possiveis.append(word)
                                 else:
-                                        if word in dicionario[word[0]][word[1]][word[2]] and word not in possiveis:
+                                        if word in dicionario[word[0]][word[1]][word[2]][word[3]] and word not in possiveis:
                                                 possiveis.append(word)
                 for i in substituir:
                         lista = substitui(i,alfabeto)
                         for word in lista:
-                                if len(word)<4:
-                                        if word in dicionario["tres"] and word not in possiveis:
+                                if len(word)<5:
+                                        if word in dicionario["quatro"] and word not in possiveis:
                                                 possiveis.append(word)
                                 else:
-                                        if word in dicionario[word[0]][word[1]][word[2]] and word not in possiveis:
+                                        if word in dicionario[word[0]][word[1]][word[2]][word[3]] and word not in possiveis:
                                                 possiveis.append(word)
 
                 for i in trocar:
                         lista = troca(i)
                         for word in lista:
-                                if len(word)<4:
-                                        if word in dicionario["tres"] and word not in possiveis:
+                                if len(word)<5:
+                                        if word in dicionario["quatro"] and word not in possiveis:
                                                 possiveis.append(word)
                                 else:
-                                        if word in dicionario[word[0]][word[1]][word[2]] and word not in possiveis:
+                                        if word in dicionario[word[0]][word[1]][word[2]][word[3]] and word not in possiveis:
                                                 possiveis.append(word)
+
 
         if len(possiveis)==0:
                 nivel = 3
@@ -217,7 +227,38 @@ def corretor_palavra(palavra, dicionario):
 
 # classifica em niveis o quanto uma frase está próxima do dicionário
 
-def peso(palavras, sugestoes, niveis):
+
+def peso(palavras, sugestoes, niveis, informais):
+
+        score = 1.0
+        informal = 0.2
+        nivel_um = 0.3
+        nivel_dois = 0.4
+        impossivel = 0.5
+        impossiveis = len([impossivel for impossivel in sugestoes if len(sugestoes[impossivel])==0])
+        possiveis = len([possivel for possivel in sugestoes if len(sugestoes[possivel])>0])
+        informais = len(informais)
+        um = len([nivel for nivel in niveis if nivel==1])
+        dois = len([nivel for nivel in niveis if nivel==2])
+        if len(palavras)>15 or impossiveis==len(palavras):
+                score = 0.0
+        else:
+                score -= (impossiveis*impossivel)+(um*nivel_um)+(dois*nivel_dois)+(informais*informal)
+
+        
+        print ("Corretas: "+str((len(palavras)-len(sugestoes))-informais))
+        print ("Completamente erradas: "+str(impossiveis))
+        print ("Com erro nivel um: "+str(um))
+        print ("Com erro nivel dois: "+str(dois))
+        print ("Informais: "+str(informais))
+        print ("")
+        print ("Score: "+str(float(format(score, '.2f'))))
+        
+
+
+        """
+
+        print(informais)
 
         if len(sugestoes)==0:
                 print("Tudo certo. Nota 1.0")
@@ -229,7 +270,7 @@ def peso(palavras, sugestoes, niveis):
 
         impossiveis = [impossivel for impossivel in sugestoes if len(sugestoes[impossivel])==0]
         if len(impossiveis)>0:
-                print("1 palavra impossível de ser corrigida. Nota 0.")
+                print("Pelo menos 1 palavra impossível de ser corrigida. Nota 0.")
                 return
         
         if len(palavras)==len(sugestoes):
@@ -255,7 +296,7 @@ def peso(palavras, sugestoes, niveis):
                 return
 
 
-"""
+
 
  
         print ("%s palavras" %(len(palavras)))
