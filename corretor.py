@@ -123,13 +123,31 @@ def corretor_palavra(palavra, dicionario):
         nivel = 1
 
         possiveis = []
-
+        possiveis += [
+                w for w in insere(palavra, alfabeto)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in exclui(palavra)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in substitui(palavra, alfabeto)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in troca(palavra)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        
+        """
         inserir = insere(palavra, alfabeto)
         excluir = exclui(palavra)
         substituir = substitui(palavra, alfabeto)
         trocar = troca(palavra)
 
 
+        
         for word in inserir:
                 if word in dicionario["formal"] or word in dicionario["informal"]:
                         possiveis.append(word)
@@ -142,10 +160,30 @@ def corretor_palavra(palavra, dicionario):
         for word in trocar:
                 if word in dicionario["formal"] or word in dicionario["informal"]:
                         possiveis.append(word)
+        """
 
         if len(possiveis)==0:
 
                 nivel += 1
+
+                possiveis += [
+                        insere(w, alfabeto) for w in insere(palavra, alfabeto)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                possiveis += [
+                        exclui(w) for w in exclui(palavra)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                possiveis += [
+                        substitui(w, alfabeto) for w in substitui(palavra, alfabeto)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                possiveis += [
+                        troca(w) for w in troca(palavra)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+
+                """
                 
                 for i in inserir:
                         lista = insere(i,alfabeto)
@@ -168,10 +206,11 @@ def corretor_palavra(palavra, dicionario):
                         for word in lista:
                                 if word in dicionario["formal"] or word in dicionario["informal"]:
                                         possiveis.append(word)
+                """
 
 
-        if len(possiveis)==0:
-                nivel = 3
+                if len(possiveis)==0:
+                        nivel = 3
                         
 
                
@@ -197,7 +236,12 @@ def peso(palavras, sugestoes, niveis, informais):
         if len(palavras)>15 or impossiveis==len(palavras):
                 score = 0.0
         else:
-                score -= (impossiveis*impossivel)+(um*nivel_um)+(dois*nivel_dois)+(informais*informal)
+                score -= (
+                        impossiveis*(impossivel/len(palavras))+
+                        um*(nivel_um/len(palavras))+
+                        dois*(nivel_dois/len(palavras))+
+                        informais*(informal/len(palavras))
+                        )
 
         
         print ("Corretas: "+str((len(palavras)-len(sugestoes))-informais))
