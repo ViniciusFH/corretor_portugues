@@ -221,34 +221,31 @@ def corretor_palavra(palavra, dicionario):
 # score de uma frase
 
 
-def peso(palavras, sugestoes, niveis, informais):
+def peso(palavras, corretas, um, dois, impossiveis, informais):
 
-        score = 1.0
-        informal = 0.2
-        nivel_um = 0.3
-        nivel_dois = 0.4
-        impossivel = 0.5
-        impossiveis = len([impossivel for impossivel in sugestoes if len(sugestoes[impossivel])==0])
-        possiveis = len([possivel for possivel in sugestoes if len(sugestoes[possivel])>0])
-        informais = len(informais)
-        um = len([nivel for nivel in niveis if nivel==1])
-        dois = len([nivel for nivel in niveis if nivel==2])
-        if len(palavras)>15 or impossiveis==len(palavras):
-                score = 0.0
-        else:
+        if palavras>0 and palavras<15:
+                score = 1.0
+                informal = 0.1
+                nivel_um = 0.2
+                nivel_dois = 0.3
+                impossivel = 0.5
                 score -= (
-                        impossiveis*(impossivel/len(palavras))+
-                        um*(nivel_um/len(palavras))+
-                        dois*(nivel_dois/len(palavras))+
-                        informais*(informal/len(palavras))
+                        impossiveis*impossivel+
+                        um*nivel_um+
+                        dois*nivel_dois+
+                        informais*informal
                         )
+        else:
+                score = 0.0
 
-        
-        print ("Corretas: "+str((len(palavras)-len(sugestoes))-informais))
+        print ("")
+        print ("Número de palavras: "+str(palavras))
+        print ("Corretas: "+str(corretas))
         print ("Completamente erradas: "+str(impossiveis))
         print ("Com erro nivel um: "+str(um))
         print ("Com erro nivel dois: "+str(dois))
         print ("Informais: "+str(informais))
         print ("")
         print ("Score: "+str(float(format(score, '.2f'))))
+        print ("")
         
