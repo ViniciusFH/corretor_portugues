@@ -1,19 +1,26 @@
 from corretor import *
-from formal_arvore import formal
-from informal_arvore import informal
+from grande_dicionario import dicionario
 import time
 import unidecode
 import re
 repeater = True
 while repeater:
-    palavras = [re.sub("[^a-zA-Z]+","",re.sub('[\"\']+',"",word)) for word in unidecode.unidecode(input("Insira a frase: ")).split()]
+    score = 1.0
+    palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\-]+'," ",input("Insira a frase: "))).split() if not re.match("^[^a-zA-Z]+$",word)]
     temp_1=time.time()
-    erradas,informais = identifica(palavras,formal,informal)
-    sugestoes,niveis = corretor_frase(erradas,formal)
-    print ("")
-    peso(palavras,sugestoes,niveis,informais)
-    temp_2=time.time()
-    demora=float(format(temp_2-temp_1, '.2f'))
-    print ("")
-    print ("Demorou %s segundos" %(demora))
-    print ("")
+    if len(palavras)>0 and len(palavras)<15:
+        erradas,informais = identifica(palavras,dicionario)
+        informais = len(informais)
+        corretas = len(palavras)-(len(erradas)+informais)
+        sugestoes,niveis = corretor_frase(erradas,dicionario)
+        impossiveis = len([impossivel for impossivel in sugestoes if len(sugestoes[impossivel])==0])
+        um = len([nivel for nivel in niveis if nivel==1])
+        dois = len([nivel for nivel in niveis if nivel==2])
+    else:
+        erradas = 0
+        informais = 0
+        corretas = 0
+        impossiveis = 0
+        um = 0
+        dois = 0
+    peso(len(palavras),corretas,um,dois,impossiveis,informais)
