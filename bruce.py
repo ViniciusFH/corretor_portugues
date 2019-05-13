@@ -6,7 +6,7 @@ import re
 repeater = True
 while repeater:
     score = 1.0
-    palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\-]+'," ",input("Insira a frase: "))).split() if not re.match("^[^a-zA-Z]+$",word)]
+    palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\-\,\;\.\:\(\)]+'," ",input("Insira a frase: "))).split() if not re.match("^[^a-zA-Z]+$",word)]
     temp_1=time.time()
     if len(palavras)>0 and len(palavras)<15:
         erradas,informais = identifica(palavras,dicionario)
