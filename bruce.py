@@ -12,8 +12,8 @@ while repeater:
         erradas,informais = identifica(palavras,dicionario)
         informais = len(informais)
         corretas = len(palavras)-(len(erradas)+informais)
-        sugestoes,niveis = corretor_frase(erradas,dicionario)
-        impossiveis = len([impossivel for impossivel in sugestoes if len(sugestoes[impossivel])==0])
+        niveis = corretor_frase(erradas,dicionario)
+        impossiveis = len([tres for tres in niveis if tres==3])
         um = len([nivel for nivel in niveis if nivel==1])
         dois = len([nivel for nivel in niveis if nivel==2])
     else:

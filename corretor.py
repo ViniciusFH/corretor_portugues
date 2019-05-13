@@ -107,7 +107,7 @@ def corretor_frase(erradas, dicionario):
         for erro in erradas:
                 sugestoes[erro],nivel = corretor_palavra(erro,dicionario)
                 niveis.append(nivel)
-        return sugestoes,niveis
+        return niveis
 
         
 # retorna uma lista com a soma do que é
@@ -225,15 +225,14 @@ def peso(palavras, corretas, um, dois, impossiveis, informais):
 
         if palavras>0 and palavras<15:
                 score = 1.0
-                informal = 0.1
-                nivel_um = 0.2
-                nivel_dois = 0.3
-                impossivel = 0.5
-                score -= (
-                        impossiveis*impossivel+
-                        um*nivel_um+
-                        dois*nivel_dois+
-                        informais*informal
+                informal = (informais/palavras)*0.2
+                nivel_um = (um/palavras)*0.4
+                nivel_dois = (dois/palavras)*0.7
+                impossivel = (impossiveis/palavras)*1.0
+                score -= (informal+
+                          nivel_um+
+                          nivel_dois+
+                          impossivel
                         )
         else:
                 score = 0.0

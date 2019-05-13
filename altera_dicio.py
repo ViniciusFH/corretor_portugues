@@ -6,11 +6,14 @@ while True:
             altera=False
     palavra = input("Digite exatamente a palavra que quer %s: " %(alteracao))
     tipo_dicionario = True
+    from grande_dicionario import dicionario
     while tipo_dicionario:
         tipo = input("Em qual dicionário? (formal/informal) ")
         if tipo=="formal" or tipo=="informal":
-            tipo_dicionario = False
-    from grande_dicionario import dicionario
+            if palavra in dicionario[tipo] and alteracao == "remover":
+                tipo_dicionario = False
+            else:
+                print ("Esta palavra não está no dicionário %s" %(tipo))
     if alteracao == "adicionar":
         if tipo=="formal":
             dicionario["formal"].add(palavra)
