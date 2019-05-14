@@ -10,7 +10,7 @@ while True:
     while tipo_dicionario:
         tipo = input("Em qual dicionário? (formal/informal) ")
         if tipo=="formal" or tipo=="informal":
-            if palavra in dicionario[tipo] and alteracao == "remover":
+            if (palavra in dicionario[tipo] and alteracao == "remover") or alteracao == "adicionar":
                 tipo_dicionario = False
             else:
                 print ("Esta palavra não está no dicionário %s" %(tipo))
