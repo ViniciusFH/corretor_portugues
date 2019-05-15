@@ -109,7 +109,40 @@ def corretor_frase(erradas, dicionario):
                 niveis.append(nivel)
         return niveis
 
-        
+
+def corrige(palavra,nivel,alfabeto,dicionario):
+
+        possiveis = []
+
+        if nivel==1:
+                possiveis += [
+                w for w in insere(palavra, alfabeto)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+                possiveis += [
+                        w for w in exclui(palavra)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                possiveis += [
+                        w for w in substitui(palavra, alfabeto)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                possiveis += [
+                        w for w in troca(palavra)
+                        if w in dicionario["formal"] or w in dicionario["informal"]
+                        ]
+                return possiveis
+        else:
+                ins = insere(palavra, alfabeto)
+                exc = exclui(palavra)
+                sub = substitui(palavra, alfabeto)
+                tro = troca(palavra)
+                
+                return ins,exc,sub,tro
+
+
+
+                
 # retorna uma lista com a soma do que é
 # gerado em insere, exclui e substitui
 
@@ -122,91 +155,20 @@ def corretor_palavra(palavra, dicionario):
 
         nivel = 1
 
-        possiveis = []
-        possiveis += [
-                w for w in insere(palavra, alfabeto)
-                if w in dicionario["formal"] or w in dicionario["informal"]
-                ]
-        possiveis += [
-                w for w in exclui(palavra)
-                if w in dicionario["formal"] or w in dicionario["informal"]
-                ]
-        possiveis += [
-                w for w in substitui(palavra, alfabeto)
-                if w in dicionario["formal"] or w in dicionario["informal"]
-                ]
-        possiveis += [
-                w for w in troca(palavra)
-                if w in dicionario["formal"] or w in dicionario["informal"]
-                ]
-        
-        """
-        inserir = insere(palavra, alfabeto)
-        excluir = exclui(palavra)
-        substituir = substitui(palavra, alfabeto)
-        trocar = troca(palavra)
-
-
-        
-        for word in inserir:
-                if word in dicionario["formal"] or word in dicionario["informal"]:
-                        possiveis.append(word)
-        for word in excluir:
-                if word in dicionario["formal"] or word in dicionario["informal"]:
-                        possiveis.append(word)
-        for word in substituir:
-                if word in dicionario["formal"] or word in dicionario["informal"]:
-                        possiveis.append(word)
-        for word in trocar:
-                if word in dicionario["formal"] or word in dicionario["informal"]:
-                        possiveis.append(word)
-        """
+        possiveis = corrige(palavra,nivel,alfabeto,dicionario)
 
         if len(possiveis)==0:
 
                 nivel += 1
 
-                possiveis += [
-                        insere(w, alfabeto) for w in insere(palavra, alfabeto)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                possiveis += [
-                        exclui(w) for w in exclui(palavra)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                possiveis += [
-                        substitui(w, alfabeto) for w in substitui(palavra, alfabeto)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                possiveis += [
-                        troca(w) for w in troca(palavra)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
+                ins,exc,sub,tro = corrige(palavra,nivel,alfabeto,dicionario)
 
-                """
-                
-                for i in inserir:
-                        lista = insere(i,alfabeto)
-                        for word in lista:
-                                if word in dicionario["formal"] or word in dicionario["informal"]:
-                                        possiveis.append(word)
-                for i in excluir:
-                        lista = exclui(i)
-                        for word in lista:
-                                if word in dicionario["formal"] or word in dicionario["informal"]:
-                                        possiveis.append(word)
-                for i in substituir:
-                        lista = substitui(i,alfabeto)
-                        for word in lista:
-                                if word in dicionario["formal"] or word in dicionario["informal"]:
-                                        possiveis.append(word)
+                possiveis = []
 
-                for i in trocar:
-                        lista = troca(i)
-                        for word in lista:
-                                if word in dicionario["formal"] or word in dicionario["informal"]:
-                                        possiveis.append(word)
-                """
+                possiveis += [pal for pal in list(set().union(*[[w for w in insere(word,alfabeto)] for word in ins])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
+                possiveis += [pal for pal in list(set().union(*[[w for w in exclui(word)] for word in exc])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
+                possiveis += [pal for pal in list(set().union(*[[w for w in substitui(word,alfabeto)] for word in sub])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
+                possiveis += [pal for pal in list(set().union(*[[w for w in troca(word)] for word in tro])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
 
 
                 if len(possiveis)==0:
