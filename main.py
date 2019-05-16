@@ -24,3 +24,6 @@ while repeater:
         um = 0
         dois = 0
     peso(len(palavras),corretas,um,dois,impossiveis,informais)
+    temp_2=time.time()
+    demora = float(format(temp_2-temp_1, '.2f'))
+    print (demora)

@@ -109,39 +109,6 @@ def corretor_frase(erradas, dicionario):
                 niveis.append(nivel)
         return niveis
 
-
-def corrige(palavra,nivel,alfabeto,dicionario):
-
-        possiveis = []
-
-        if nivel==1:
-                possiveis += [
-                w for w in insere(palavra, alfabeto)
-                if w in dicionario["formal"] or w in dicionario["informal"]
-                ]
-                possiveis += [
-                        w for w in exclui(palavra)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                possiveis += [
-                        w for w in substitui(palavra, alfabeto)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                possiveis += [
-                        w for w in troca(palavra)
-                        if w in dicionario["formal"] or w in dicionario["informal"]
-                        ]
-                return possiveis
-        else:
-                ins = insere(palavra, alfabeto)
-                exc = exclui(palavra)
-                sub = substitui(palavra, alfabeto)
-                tro = troca(palavra)
-                
-                return ins,exc,sub,tro
-
-
-
                 
 # retorna uma lista com a soma do que é
 # gerado em insere, exclui e substitui
@@ -149,26 +116,80 @@ def corrige(palavra,nivel,alfabeto,dicionario):
 
 def corretor_palavra(palavra, dicionario):
 
+        possiveis = []
+
+        if len(palavra)>20:
+                nivel = 3
+                return possiveis, nivel
+        
+        nivel = 1
+
+        import time
+
         alfabeto = ["a","b","c","d","e","f","g","h",
                     "i","j","k","l","m","n","o","p",
                     "q","r","s","t","u","v","x","w","y","z"]
 
-        nivel = 1
 
-        possiveis = corrige(palavra,nivel,alfabeto,dicionario)
+        t_1 = time.time()
+
+        possiveis += [
+                w for w in insere(palavra, alfabeto)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in exclui(palavra)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in substitui(palavra, alfabeto)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        possiveis += [
+                w for w in troca(palavra)
+                if w in dicionario["formal"] or w in dicionario["informal"]
+                ]
+        t_2 = time.time()
+        print("1o nivel: "+str(float(format(t_2-t_1, '.5f'))))
 
         if len(possiveis)==0:
 
-                nivel += 1
+                nivel+=1
 
-                ins,exc,sub,tro = corrige(palavra,nivel,alfabeto,dicionario)
+                t_1 = time.time()
 
-                possiveis = []
+                ins = insere(palavra, alfabeto)
+                exc = exclui(palavra)
+                sub = substitui(palavra, alfabeto)
+                tro = troca(palavra)
 
-                possiveis += [pal for pal in list(set().union(*[[w for w in insere(word,alfabeto)] for word in ins])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
-                possiveis += [pal for pal in list(set().union(*[[w for w in exclui(word)] for word in exc])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
-                possiveis += [pal for pal in list(set().union(*[[w for w in substitui(word,alfabeto)] for word in sub])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
-                possiveis += [pal for pal in list(set().union(*[[w for w in troca(word)] for word in tro])) if pal in dicionario["formal"] or pal in dicionario["informal"]]
+                t_2 = time.time()
+                print("Cria insere etc: "+str(float(format(t_2-t_1, '.5f'))))
+                t_1 = time.time()
+
+                for word in ins:
+                        possiveis += [
+                                w for w in insere(word, alfabeto)
+                                if w in dicionario["formal"] or w in dicionario["informal"]
+                                ]
+                for word in exc:
+                        possiveis += [
+                                w for w in exclui(word)
+                                if w in dicionario["formal"] or w in dicionario["informal"]
+                                ]
+                for word in sub:
+                        possiveis += [
+                                w for w in substitui(word,alfabeto)
+                                if w in dicionario["formal"] or w in dicionario["informal"]
+                                ]
+                for word in tro:
+                        possiveis += [
+                                w for w in troca(word)
+                                if w in dicionario["formal"] or w in dicionario["informal"]
+                                ]
+                        
+                t_2 = time.time()
+                print("Verifica insere etc: "+str(float(format(t_2-t_1, '.5f'))))
 
 
                 if len(possiveis)==0:
