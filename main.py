@@ -6,12 +6,13 @@ import re
 repeater = True
 while repeater:
     score = 1.0
-    palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\-\,\;\.\:\(\)]+'," ",input("Insira a frase: "))).split() if not re.match("^[^a-zA-Z]+$",word)]
+    palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\-\,\;\.\:\(\)]+'," ",input("Insira a frase: "))).split()]
     temp_1=time.time()
-    if len(palavras)>0 and len(palavras)<15:
+    tam_fras = len(palavras)
+    if tam_fras>0 and tam_fras<15:
         erradas,informais = identifica(palavras,dicionario)
         informais = len(informais)
-        corretas = len(palavras)-(len(erradas)+informais)
+        corretas = tam_fras-(len(erradas)+informais)
         niveis = corretor_frase(erradas,dicionario)
         impossiveis = len([tres for tres in niveis if tres==3])
         um = len([nivel for nivel in niveis if nivel==1])
@@ -23,7 +24,7 @@ while repeater:
         impossiveis = 0
         um = 0
         dois = 0
-    peso(len(palavras),corretas,um,dois,impossiveis,informais)
+    peso(tam_fras,corretas,um,dois,impossiveis,informais)
     temp_2=time.time()
     demora = float(format(temp_2-temp_1, '.2f'))
     print (demora)
