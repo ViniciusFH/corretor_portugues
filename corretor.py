@@ -60,9 +60,11 @@ def nivel_correcao(palavra, dicionario):
         
         nivel += 1
         if len(palavra)>15:
+                nivel+=1
                 return nivel
         for i in mod:
-                for j in modifica(i):
+                mod_2 = modifica(i)
+                for j in mod_2:
                         if j in dicionario["formal"] or j in dicionario["informal"]:
                                 return nivel
 
