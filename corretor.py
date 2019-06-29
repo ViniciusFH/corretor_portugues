@@ -9,11 +9,13 @@ def modifica(palavra):
         return set(deleta + troca + substitui + insere)
 
 
-# numa dada frase, identifica quais palavras nao
-# pertencem ao dicionario, e devolve uma lista com elas
+
 
 
 def identifica(palavras, dicionario):
+
+        # numa dada frase, identifica quais palavras nao
+        # pertencem ao dicionario, e devolve uma lista com elas
     
     
     erradas = []
@@ -29,23 +31,24 @@ def identifica(palavras, dicionario):
     return erradas, informais                                          
 
 
-# retorna uma lista de sugestões para correção de
-# cada palavra identificada na função identifica
 
 
 def corretor_frase(erradas, dicionario):
 
+        # retorna uma lista de sugestões para correção de
+        # cada palavra identificada na função identifica
+
         niveis = []
         for erro in erradas:
                 niveis.append(nivel_correcao(erro,dicionario))
-        return niveis
+        return niveis.count(1),niveis.count(2),niveis.count(3)
 
                 
-# retorna uma lista com a soma do que é
-# gerado em insere, exclui e substitui
-
 
 def nivel_correcao(palavra, dicionario):
+
+        # retorna uma lista com a soma do que é
+        # gerado em insere, exclui e substitui
 
         import re
         if not re.match("^[a-zA-Z]+$",palavra) and len(palavra)>20:
@@ -75,33 +78,22 @@ def nivel_correcao(palavra, dicionario):
 
 
 
-# score de uma frase
-
 
 def peso(palavras, corretas, um, dois, impossiveis, informais):
 
-        if palavras>0 and palavras<15:
-                score = 1.0
-                informal = (informais/palavras)*0.5
-                nivel_um = (um/palavras)*0.7
-                nivel_dois = (dois/palavras)*0.8
-                impossivel = (impossiveis/palavras)*1.0
-                score -= (informal+
-                          nivel_um+
-                          nivel_dois+
-                          impossivel
-                        )
-        else:
-                score = 0.0
 
-        print ("")
-        print ("Número de palavras: "+str(palavras))
-        print ("Corretas: "+str(corretas))
-        print ("Completamente erradas: "+str(impossiveis))
-        print ("Com erro nivel um: "+str(um))
-        print ("Com erro nivel dois: "+str(dois))
-        print ("Informais: "+str(informais))
-        print ("")
-        print ("Score: "+str(float(format(score, '.2f'))))
-        print ("")
+        # score de uma frase
+        
+        score = 1.0
+        informal = (informais/palavras)*0.5
+        nivel_um = (um/palavras)*0.7
+        nivel_dois = (dois/palavras)*0.8
+        impossivel = (impossiveis/palavras)*1.0
+        score -= (informal+
+                  nivel_um+
+                  nivel_dois+
+                  impossivel
+                )
+        return score
+
         
