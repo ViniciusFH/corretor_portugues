@@ -1,10 +1,10 @@
 def filtro(scores, operador, valor):
 
-        if operador == "igual":
+        if operador == "igual" or "=":
                 return [f for f in scores if f[1]==valor]
-        elif operador == "maior":
+        elif operador == "maior" or ">":
                 return [f for f in scores if f[1]>valor]
-        elif operador == "menor":
+        elif operador == "menor" or "<":
                 return [f for f in scores if f[1]<valor]
 
 
@@ -133,7 +133,3 @@ def modifica(palavra):
         insere = [E + c + D                     for E, D in divide for c in alfabeto]
         
         return set(deleta + troca + substitui + insere)
-
-
-
-
