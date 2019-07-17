@@ -1,6 +1,6 @@
 def altera_dicionario(alteracao, tipo, palavras):
 
-    from grande_dicionario import dicionario
+    from dicionario import dicionario
     mudanca = False
 
     if alteracao == "remover":
@@ -19,7 +19,7 @@ def altera_dicionario(alteracao, tipo, palavras):
         for word in palavras:
             dicionario[tipo].add(word)
 
-    novo = open("grande_dicionario.py","w")
+    novo = open("dicionario.py","w")
     novo.write("dicionario = "+str(dicionario))
     novo.close()
     print("Feito!")
