@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 from score import *
-from corretor import *
 
 app = Flask(__name__)
 
