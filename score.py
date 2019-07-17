@@ -1,3 +1,9 @@
+from corretor import *
+from dicionario import dicionario
+import unidecode
+import re
+
+
 def filtro(scores, operador, valor):
 
 # permite filtrar as frases do bruce por score
@@ -11,11 +17,8 @@ def filtro(scores, operador, valor):
 
 
 
-def score(frases, identifica, corretor_frase):
+def score(frases):
 
-    from dicionario import dicionario
-    import unidecode
-    import re
     scores = []
     for f in frases:
         palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\,\;\.\:\(\)]+',"",f)).split()]
