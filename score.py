@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
-import bruce
+import peso
 
 class Score(Resource):
 
@@ -9,8 +9,8 @@ class Score(Resource):
                         frases = request.args.get('frases').split("$$")
                         if 'ordem' in request.args:
                                 ordem = request.args.get('ordem')
-                                return jsonify(bruce.sort(bruce.score(frases),ordem))
-                        return jsonify(bruce.score(frases))
+                                return jsonify(peso.sort(peso.score(frases),ordem))
+                        return jsonify(peso.score(frases))
                 
                 return ("Insira frase!")
 
@@ -19,8 +19,8 @@ class Score(Resource):
                 frases = json['frases']
                 if 'ordem' in json:
                         ordem = json['ordem']
-                        return jsonify(bruce.sort(score.score(frases),ordem))
-                return jsonify(bruce.score(frases))
+                        return jsonify(peso.sort(score.score(frases),ordem))
+                return jsonify(peso.score(frases))
 
 class Filter(Resource):
 
@@ -31,8 +31,8 @@ class Filter(Resource):
                         valor = request.args.get('valor', type=float)
                         if 'ordem' in request.args:
                                 ordem = request.args.get('ordem')
-                                return jsonify(bruce.sort(bruce.filtro(bruce.score(frases),operador,valor),ordem))
-                        return jsonify(bruce.filtro(bruce.score(frases),operador,valor))
+                                return jsonify(peso.sort(peso.filtro(peso.score(frases),operador,valor),ordem))
+                        return jsonify(peso.filtro(peso.score(frases),operador,valor))
                 return ("Faltam parâmetros!")
 
         def post(self):
@@ -42,5 +42,5 @@ class Filter(Resource):
                 valor = json['valor']
                 if 'ordem' in json:
                         ordem = json['ordem']
-                        return jsonify(bruce.sort((bruce.filtro(bruce.score(frases),operador,valor)),ordem))
-                return jsonify(bruce.filtro(bruce.score(frases),operador,valor))
+                        return jsonify(peso.sort((peso.filtro(peso.score(frases),operador,valor)),ordem))
+                return jsonify(peso.filtro(peso.score(frases),operador,valor))
