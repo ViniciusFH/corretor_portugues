@@ -3,6 +3,15 @@ from dicionario import dicionario
 import unidecode
 import re
 
+def sort(scores, ordem):
+
+	if ordem == 'asc':
+		return sorted(scores, key = lambda i: i["score"])
+	elif ordem == 'desc':
+		return sorted(scores, key = lambda i: i["score"], reverse=True)
+	else:
+		return ('Digite "asc" ou "desc".')
+
 
 def filtro(scores, operador, valor):
 

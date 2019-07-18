@@ -33,7 +33,21 @@ def filter():
 		valor = request.args.get('valor', type=float)
 		return jsonify(score.filtro(score.score(frases.split("$$")),operador,valor))
 
+@app.route('/score/sort', methods=['GET', 'POST'])
+
+def sort():
+	if (request.method == 'POST'):
+		json = request.get_json()
+		frases = json['frases']
+		ordem = json['ordem']
+		return jsonify(score.sort(score.score(frases),ordem))
+
+	else:
+		frases = request.args.get('frases')
+		ordem = request.args.get('ordem')
+		return jsonify(score.sort(score.score(frases.split("$$")),ordem))
 
 
 if __name__ == '__main__':
-	app.run(host= '0.0.0.0')
+	app.run(debug=True)
+	# app.run(host= '0.0.0.0')
