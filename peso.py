@@ -30,15 +30,18 @@ def score(frases):
 
     scores = []
     for f in frases:
-        palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\,\;\.\:\(\)]+',"",f)).split()]
-        if len(palavras)>0 and len(palavras)<15:
+        palavras = list(filter(None,re.split('[\"\'\,\;\.\:\(\)\?\! ]+',unidecode.unidecode(f.lower()))))
+        if 0 < len(palavras) < 15:
             erradas,informais = identifica(palavras,dicionario)
             corretas = len(palavras)-(len(erradas)+len(informais))
             um, dois, impossiveis = corretor_frase(erradas,dicionario)
             score = peso(len(palavras),corretas,um,dois,impossiveis,len(informais))
             scores.append({"frase": f, "score": score})
-
+        else:
+            scores.append({"frase": f, "score": 0})
     return scores
+
+    
 
 
 

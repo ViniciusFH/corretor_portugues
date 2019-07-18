@@ -9,4 +9,4 @@ api.add_resource(score.Score, '/score')
 api.add_resource(score.Filter, '/score/filter')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
