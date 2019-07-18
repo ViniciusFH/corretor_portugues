@@ -19,7 +19,7 @@ class Score(Resource):
                 frases = json['frases']
                 if 'ordem' in json:
                         ordem = json['ordem']
-                        return jsonify(peso.sort(score.score(frases),ordem))
+                        return jsonify(peso.sort(peso.score(frases),ordem))
                 return jsonify(peso.score(frases))
 
 class Filter(Resource):
