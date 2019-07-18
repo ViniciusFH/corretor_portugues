@@ -1,51 +1,46 @@
-from corretor import *
-from dicionario import dicionario
-import unidecode
-import re
+from flask import jsonify, request
+from flask_restful import Resource
+import bruce
 
-def sort(scores, ordem):
+class Score(Resource):
 
-	if ordem == 'asc':
-		return sorted(scores, key = lambda i: i["score"])
-	elif ordem == 'desc':
-		return sorted(scores, key = lambda i: i["score"], reverse=True)
-	else:
-		return ('Digite "asc" ou "desc".')
+        def get(self):
+                if 'frases' in request.args:
+                        frases = request.args.get('frases').split("$$")
+                        if 'ordem' in request.args:
+                                ordem = request.args.get('ordem')
+                                return jsonify(bruce.sort(bruce.score(frases),ordem))
+                        return jsonify(bruce.score(frases))
+                
+                return ("Insira frase!")
 
+        def post(self):
+                json = request.get_json()
+                frases = json['frases']
+                if 'ordem' in json:
+                        ordem = json['ordem']
+                        return jsonify(bruce.sort(score.score(frases),ordem))
+                return jsonify(bruce.score(frases))
 
-def filtro(scores, operador, valor):
+class Filter(Resource):
 
-# permite filtrar as frases do bruce por score
+        def get(self):
+                if len({'frases','operador','valor'}-set(request.args))==0:
+                        frases = request.args.get('frases').split("$$")
+                        operador = request.args.get('operador')
+                        valor = request.args.get('valor', type=float)
+                        if 'ordem' in request.args:
+                                ordem = request.args.get('ordem')
+                                return jsonify(bruce.sort(bruce.filtro(bruce.score(frases),operador,valor),ordem))
+                        return jsonify(bruce.filtro(bruce.score(frases),operador,valor))
+                return ("Faltam parâmetros!")
 
-    if operador == "igual" or operador == "=":
-            return [f for f in scores if f["score"]==valor]
-    elif operador == "maior" or operador == ">":
-            return [f for f in scores if f["score"]>valor]
-    elif operador == "menor" or operador == "<":
-            return [f for f in scores if f["score"]<valor]
-
-
-
-def score(frases):
-
-    scores = []
-    for f in frases:
-        palavras = [word.lower() for word in unidecode.unidecode(re.sub('[\"\'\,\;\.\:\(\)]+',"",f)).split()]
-        if len(palavras)>0 and len(palavras)<15:
-            erradas,informais = identifica(palavras,dicionario)
-            corretas = len(palavras)-(len(erradas)+len(informais))
-            um, dois, impossiveis = corretor_frase(erradas,dicionario)
-            score = peso(len(palavras),corretas,um,dois,impossiveis,len(informais))
-            scores.append({"frase": f, "score": score})
-
-    return scores
-
-
-
-def peso(palavras, corretas, um, dois, impossiveis, informais):
-        
-    return float(format(1.0 - (0.5*informais+
-                   0.7*um+
-                   0.8*dois+
-                   impossiveis
-                  )/ palavras, ".2f"))
+        def post(self):
+                json = request.get_json()
+                frases = json['frases']
+                operador = json['operador']
+                valor = json['valor']
+                if 'ordem' in json:
+                        ordem = json['ordem']
+                        return jsonify(bruce.sort((bruce.filtro(bruce.score(frases),operador,valor)),ordem))
+                return jsonify(bruce.filtro(bruce.score(frases),operador,valor))
