@@ -5,9 +5,9 @@ import re
 
 def sort(scores, ordem):
 
-	if ordem == 'asc':
+	if ordem.lower() == 'asc' or ordem.lower() == 'ascendente':
 		return sorted(scores, key = lambda i: i["score"])
-	elif ordem == 'desc':
+	elif ordem.lower() == 'desc' or ordem.lower() == 'descendente':
 		return sorted(scores, key = lambda i: i["score"], reverse=True)
 	else:
 		return ('Digite "asc" ou "desc".')
@@ -18,11 +18,16 @@ def filtro(scores, operador, valor):
 # permite filtrar as frases do bruce por score
 
     if operador == "igual" or operador == "=":
-            return [f for f in scores if f["score"]==valor]
+            return [f for f in scores if f["score"] == valor]
     elif operador == "maior" or operador == ">":
-            return [f for f in scores if f["score"]>valor]
+            return [f for f in scores if f["score"] > valor]
     elif operador == "menor" or operador == "<":
-            return [f for f in scores if f["score"]<valor]
+            return [f for f in scores if f["score"] < valor]
+    elif operador == "menor ou igual" or operador == "<=":
+            return [f for f in scores if f["score"] <= valor]
+    elif operador == "maior ou igual" or operador == ">=":
+            return [f for f in scores if f["score"] >= valor]
+        
 
 
 
