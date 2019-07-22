@@ -9,36 +9,36 @@ class Score(Resource):
                 
                 json = request.get_json()
                 frases = json['frases']
-                if 'ordem' in json:
+                ordem = 'desc'
+                operador = '='
+                
+                if 'ordem' in json and json['ordem']:
                         ordem = json['ordem']
-                else:
-                        ordem = 'desc'
-                if 'valor' not in json:
+                if 'valor' not in json or not json['valor']:
                         return jsonify(peso.sort(peso.score(frases),ordem))
+                
                 valor = json['valor']
-                if 'operador' in json:
+                
+                if 'operador' in json and json['operador']:
                         operador = json['operador']
-                else:
-                        operador = '='
                         
                 return jsonify(peso.sort((peso.filtro(peso.score(frases),operador,valor)),ordem))
 
 
         def get(self):
+
+                ordem = 'desc'
+                operador = '='
                 
                 if 'frases' in request.args:
                         frases = request.args.get('frases').split('$$')
                         if 'ordem' in request.args:
                                 ordem = request.args.get('ordem')
-                        else:
-                                ordem = 'desc'
                         if 'valor' not in request.args:
                                 return jsonify(peso.sort(peso.score(frases),ordem))
                         valor = float(request.args.get('valor'))
                         if 'operador' in request.args:
                                 operador = request.args.get('operador')
-                        else:
-                                operador = '='
                         
                         return jsonify(peso.sort((peso.filtro(peso.score(frases),operador,valor)),ordem))
                 
