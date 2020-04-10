@@ -1,11 +1,11 @@
-from flask import Flask, request
-from flask_restful import Resource, Api
-import score
+from flask import Flask
+from routes import blueprints
 
 app = Flask(__name__)
-api = Api(app)
+app.app_context().push()
 
-api.add_resource(score.Score, '/score')
+blueprints.register(app)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
