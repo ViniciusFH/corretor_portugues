@@ -1,7 +1,10 @@
 from flask import request
 from analyzer import score
+import time
 
 def sentences():
+
+	before = time.time()
 
 	if request.method == 'GET':
 
@@ -43,4 +46,6 @@ def sentences():
 
 	scores = score(sentences, order='desc', operator='=', value=None)
 
-	return {'success': True, 'scores': scores}
+	diff = time.time() - before
+
+	return {'success': True, 'scores': scores, 'time': diff}
