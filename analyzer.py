@@ -1,7 +1,6 @@
 import unidecode
 import re
-from checker import detectNonFormal, sentenceCorrection
-from dictionary import dicionario as dictionary
+from checker import checker
 
 
 def sortScore(scores, order):
@@ -30,7 +29,26 @@ def filterScore(scores, operator, value):
     	return [s for s in scores if f["score"] >= value]
 
     return scores
-       
+
+def threeDistances(words):
+
+	one, two, more = 0, 0, 0
+
+	distances = checker.countDistances(words)
+
+	if 1 in distances:
+		one = distances[1]
+		del distances[1]
+      
+	if 2 in distances:
+		one = distances[2]
+		del distances[2]
+
+	for d in distances:
+		more += distances[d]
+
+	return one, two, more
+
 
 def getScores(sentences):
 
@@ -45,11 +63,13 @@ def getScores(sentences):
 			scores.append({"sentence": s, "score": 0.0})
 			continue
 
-		# Identifica palavras com erro ou informais. 
-		wrong, informal = detectNonFormal(words,dictionary)
+		nonFormal = checker.detectNonFormal(words)
 
-		# Divide as palavras com erro conforme o nível de correção necessário.
-		one, two, more = sentenceCorrection(wrong, dictionary)
+		# Identifica palavras com erro ou informais. 
+		wrong, informal = nonFormal['wrong'], nonFormal['informal']
+
+		# Divide as palavras com erro níveis: um, dois ou mais.
+		one, two, more = threeDistances(wrong)
 
 		# Calcula o score da frase.
 		sentenceScore = calculateScore(len(words), one, two, more, len(informal))
@@ -82,6 +102,3 @@ def score(sentences, order='desc', operator='=', value=None):
 	return sortedScores
 
 
-sentences = '¨¨¨¨'.split('$$')
-
-print(getScores(sentences))
